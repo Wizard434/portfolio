@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Портфоліо | Студент спеціальності Менеджмент</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080c10;
+    --bg2: #0e1318;
+    --bg3: #141b22;
+    --border: rgba(0,255,180,0.12);
+    --accent: #00ffb4;
+    --accent2: #00d4ff;
+    --accent3: #7b61ff;
+    --text: #e8f0f5;
+    --muted: #6b8499;
+    --card: #0f161d;
+    --card-hover: #141e28;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s;
+    transform: translate(-50%,-50%);
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 32px; height: 32px;
+    border: 1px solid rgba(0,255,180,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.15s ease, width 0.2s, height 0.2s;
+    transform: translate(-50%,-50%);
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.25rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(8,12,16,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  /* SECTIONS */
+  section {
+    min-height: 100vh;
+    padding: 8rem 3rem 5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* HERO */
+  .hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    padding-top: 7rem;
+  }
+
+  .hero-grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,180,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,180,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: -20%; left: -10%;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(0,255,180,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-glow2 {
+    position: absolute;
+    bottom: -10%; right: -5%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(123,97,255,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .tag-line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.2s forwards;
+  }
+
+  .hero h1 {
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.4s forwards;
+  }
+
+  .hero h1 span {
+    display: block;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(0,255,180,0.4);
+  }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 550px;
+    line-height: 1.7;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.6s forwards;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.8s forwards;
+  }
+
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    padding: 0.85rem 2rem;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: all 0.25s;
+    cursor: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #080c10;
+    font-weight: 700;
+    border: 1px solid var(--accent);
+  }
+  .btn-primary:hover { background: transparent; color: var(--accent); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid rgba(107,132,153,0.3);
+  }
+  .btn-secondary:hover { color: var(--text); border-color: rgba(107,132,153,0.7); }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 4rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border);
+    opacity: 0;
+    animation: fadeUp 0.7s 1s forwards;
+  }
+
+  .stat-num {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin-top: 0.2rem;
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .about-text p {
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 1.2rem;
+    font-size: 1rem;
+  }
+
+  .about-text p strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .skill-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    padding: 0.5rem 0.9rem;
+    border: 1px solid rgba(0,255,180,0.2);
+    border-radius: 2px;
+    background: rgba(0,255,180,0.04);
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+    cursor: none;
+  }
+  .skill-pill:hover {
+    background: rgba(0,255,180,0.1);
+    border-color: rgba(0,255,180,0.5);
+    transform: translateX(4px);
+  }
+
+  /* SCIENCE */
+  .science-layout {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .paper-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 1.75rem 2rem;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+  }
+
+  .paper-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.3s;
+  }
+
+  .paper-card:hover {
+    background: var(--card-hover);
+    border-color: rgba(0,255,180,0.25);
+    transform: translateX(4px);
+  }
+
+  .paper-card:hover::before { transform: scaleY(1); }
+
+  .paper-type {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent2);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.75rem;
+  }
+
+  .paper-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.6rem;
+    line-height: 1.4;
+  }
+
+  .paper-desc {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .paper-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.3rem 0.65rem;
+    border: 1px solid rgba(123,97,255,0.3);
+    color: var(--accent3);
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+    background: rgba(123,97,255,0.06);
+  }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 2rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+  }
+
+  .project-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,255,180,0.03) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .project-card:hover {
+    background: var(--card-hover);
+    border-color: rgba(0,255,180,0.25);
+    transform: translateY(-4px);
+  }
+
+  .project-card:hover::after { opacity: 1; }
+
+  .project-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(0,255,180,0.3);
+    letter-spacing: 0.2em;
+    margin-bottom: 1rem;
+  }
+
+  .project-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .project-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+
+  .project-desc {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tech-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.25rem 0.6rem;
+    background: rgba(0,212,255,0.08);
+    color: var(--accent2);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 2px;
+  }
+
+  /* QUALIFICATIONS */
+  .quals-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .qual-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 1.75rem;
+    transition: all 0.25s;
+    cursor: none;
+  }
+
+  .qual-card:hover {
+    background: var(--card-hover);
+    border-color: rgba(0,255,180,0.25);
+  }
+
+  .qual-icon {
+    width: 40px; height: 40px;
+    border: 1px solid rgba(0,255,180,0.25);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    background: rgba(0,255,180,0.05);
+  }
+
+  .qual-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.35rem;
+  }
+
+  .qual-org {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.6rem;
+  }
+
+  .qual-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .qual-year {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(107,132,153,0.6);
+    margin-top: 0.75rem;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .contact-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .contact-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+  .contact-links a:hover { color: var(--accent); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    section { padding: 6rem 1.5rem 4rem; }
+    .about-grid { grid-template-columns: 1fr; }
+    .quals-grid { grid-template-columns: 1fr; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .hero-stats { flex-direction: column; gap: 1.5rem; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="hero-grid-bg"></div>
+
+<nav>
+  <div class="nav-logo">// student.portfolio</div>
+  <ul class="nav-links">
+    <li><a href="#about">01_про_мене</a></li>
+    <li><a href="#science">02_навчання</a></li>
+    <li><a href="#projects">03_проєкти</a></li>
+    <li><a href="#quals">04_компетенції</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="about" style="min-height:100vh; padding-top:7rem;">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div style="position:relative; z-index:1;">
+    <p class="tag-line">// студент & майбутній менеджер</p>
+    <h1>
+      Артур<br>
+      <span>Куличков</span>
+    </h1>
+    <p class="hero-sub">
+      Студент 2-го курсу Кременчуцької гуманітарно-технологічної академії. 
+      Спеціальність <strong style="color:var(--accent)">073 «Менеджмент»</strong>, 
+      освітня програма «Цифровий менеджмент». 
+      Захоплююсь бізнес-аналітикою, оптимізацією процесів та впровадженням інновацій.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">студентські роботи</a>
+      <a href="#quals" class="btn btn-secondary">компетенції →</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">2</div>
+        <div class="stat-label">курс навчання</div>
+      </div>
+      <div>
+        <div class="stat-num">Что-то</div>
+        <div class="stat-label">Что-то</div>
+      </div>
+      <div>
+        <div class="stat-num">5+</div>
+        <div class="stat-label">Пет-проєктів</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:5rem; display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start;" class="reveal">
+    <div class="about-text">
+      <p>Привіт! Я — студент, який здобуває сучасну бізнес-освіту за напрямом <strong>«Цифровий менеджмент»</strong> у Кременчуцькій гуманітарно-технологічній академії Полтавської обласної ради.</p>
+      <p>Моя мета — стати фахівцем, який вміє <strong>поєднувати класичне управління з сучасними IT-інструментами</strong>. Я вивчаю, як цифровізація допомагає компаніям ставати ефективнішими, керувати проєктами та приймати рішення на основі даних.</p>
+      <p>Зараз я активно формую свої професійні навички через написання курсових робіт, участь у студентських ініціативах та розв'язання практичних бізнес-кейсів.</p>
+    </div>
+    <div>
+      <div style="margin-bottom:1.25rem; font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--accent); letter-spacing:0.15em;">// ключові навички</div>
+      <div class="skills-grid">
+        <div class="skill-pill">Project Management</div>
+        <div class="skill-pill">Основи Agile/Scrum</div>
+        <div class="skill-pill">HTML/CSS</div>
+        <div class="skill-pill">JavaScript</div>
+        <div class="skill-pill">Trello / Notion / Jira</div>
+        <div class="skill-pill">Google Workspace</div>
+        <div class="skill-pill">Основи маркетингу</div>
+        <div class="skill-pill">Комунікації</div>
+        <div class="skill-pill">Тайм-менеджмент</div>
+        <div class="skill-pill">Основи Python</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="science" style="max-width:1200px; margin:0 auto; padding:8rem 3rem 5rem;">
+  <div class="section-header reveal">
+    <span class="section-num">// 02</span>
+    <h2 class="section-title">Навчально-наукова робота</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="science-layout">
+    <div class="paper-card reveal">
+      <div class="paper-type">// курсова робота · у процесі</div>
+      <div class="paper-title">Впровадження цифрових інструментів для оптимізації процесів малого підприємства</div>
+      <div class="paper-desc">Дослідження методів цифрової трансформації для локального бізнесу. Аналіз ринку CRM-систем, інструментів командної взаємодії та оцінка економічної ефективності їх впровадження.</div>
+      <div class="paper-tags">
+        <span class="tag">Цифровізація</span>
+        <span class="tag">Бізнес-процеси</span>
+        <span class="tag">CRM</span>
+      </div>
+    </div>
+
+    <div class="paper-card reveal">
+      <div class="paper-type">// індивідуальне дослідження · 2023</div>
+      <div class="paper-title">Аналіз впливу штучного інтелекту на сучасний менеджмент</div>
+      <div class="paper-desc">Огляд інструментів на базі ШІ (ChatGPT, Notion AI тощо) та їх використання керівниками для автоматизації рутини, генерування ідей та оптимізації робочого часу.</div>
+      <div class="paper-tags">
+        <span class="tag">AI in Management</span>
+        <span class="tag">Інновації</span>
+        <span class="tag">Тайм-менеджмент</span>
+      </div>
+    </div>
+
+    <div class="paper-card reveal">
+      <div class="paper-type">// доповідь на семінарі · 2023</div>
+      <div class="paper-title">Гнучкі методології управління: Agile та Scrum у не-IT сфері</div>
+      <div class="paper-desc">Презентація про те, як принципи Agile можуть бути успішно адаптовані для маркетингових агентств, відділів продажів та студентських проєктних команд.</div>
+      <div class="paper-tags">
+        <span class="tag">Agile</span>
+        <span class="tag">Scrum</span>
+        <span class="tag">Project Management</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects" style="max-width:1200px; margin:0 auto; padding:8rem 3rem 5rem;">
+  <div class="section-header reveal">
+    <span class="section-num">// 03</span>
+    <h2 class="section-title">Навчальні проєкти</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="projects-grid">
+
+    <div class="project-card reveal">
+      <div class="project-num">// PROJECT_01</div>
+      <div class="project-icon">📈</div>
+      <div class="project-title">Бізнес-план інноваційного стартапу</div>
+      <div class="project-desc">Комплексна розробка бізнес-моделі за шаблоном Lean Canvas в рамках дисципліни. Створено фінансовий план, проведено SWOT-аналіз та маркетингове дослідження цільової аудиторії.</div>
+      <div class="project-tech">
+        <span class="tech-chip">Бізнес-планування</span>
+        <span class="tech-chip">Lean Canvas</span>
+        <span class="tech-chip">SWOT</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-num">// PROJECT_02</div>
+      <div class="project-icon">🤝</div>
+      <div class="project-title">Організація студентського заходу</div>
+      <div class="project-desc">Роль координатора команди в організації локального івенту на базі академії. Складання бюджету, розподіл завдань у Trello, пошук партнерів та проведення PR-кампанії серед студентів.</div>
+      <div class="project-tech">
+        <span class="tech-chip">Event Management</span>
+        <span class="tech-chip">Trello</span>
+        <span class="tech-chip">Командна робота</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-num">// PROJECT_03</div>
+      <div class="project-icon">📊</div>
+      <div class="project-title">Аналітичний дашборд продажів (Кейс)</div>
+      <div class="project-desc">Практична робота з побудови інформаційної панелі на основі навчального датасету. Використано зведені таблиці Excel та основи Power BI для візуалізації KPI та виявлення трендів.</div>
+      <div class="project-tech">
+        <span class="tech-chip">MS Excel</span>
+        <span class="tech-chip">Power BI (основи)</span>
+        <span class="tech-chip">Аналітика</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-num">// PROJECT_04</div>
+      <div class="project-icon">📱</div>
+      <div class="project-title">Прототип SMM-стратегії для бренду</div>
+      <div class="project-desc">Створення контент-плану, визначення tone of voice та розробка візуалів у Canva для гіпотетичного бренду в рамках курсу з основ цифрового маркетингу.</div>
+      <div class="project-tech">
+        <span class="tech-chip">SMM</span>
+        <span class="tech-chip">Canva</span>
+        <span class="tech-chip">Маркетинг</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="quals" style="max-width:1200px; margin:0 auto; padding:8rem 3rem 5rem;">
+  <div class="section-header reveal">
+    <span class="section-num">// 04</span>
+    <h2 class="section-title">Освіта та компетенції</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="quals-grid">
+
+    <div class="qual-card reveal">
+      <div class="qual-icon">🎓</div>
+      <div class="qual-title">Бакалавр з Менеджменту (у процесі)</div>
+      <div class="qual-org">Кременчуцька гуманітарно-технологічна академія</div>
+      <div class="qual-desc">Спеціальність 073 «Менеджмент», освітня програма «Цифровий менеджмент». Група М-21-Б. Вивчення економіки, управління персоналом та цифрових технологій в бізнесі.</div>
+      <div class="qual-year">// 2022 — дотепер</div>
+    </div>
+
+    <div class="qual-card reveal">
+      <div class="qual-icon">🌐</div>
+      <div class="qual-title">Основи цифрового маркетингу</div>
+      <div class="qual-org">Google Digital Garage</div>
+      <div class="qual-desc">Базовий сертифікаційний курс з інтернет-маркетингу: SEO, SEM, соціальні мережі та веб-аналітика для просування бізнесу онлайн.</div>
+      <div class="qual-year">// 2023</div>
+    </div>
+
+    <div class="qual-card reveal">
+      <div class="qual-icon">📋</div>
+      <div class="qual-title">Основи Project Management</div>
+      <div class="qual-org">Додатковий онлайн-курс</div>
+      <div class="qual-desc">Ознайомлення з життєвим циклом проєкту, ролями в команді, управлінням ризиками та інструментами планування (Gantt, Kanban).</div>
+      <div class="qual-year">// 2023</div>
+    </div>
+
+    <div class="qual-card reveal">
+      <div class="qual-icon">💡</div>
+      <div class="qual-title">Лідерство та командна динаміка</div>
+      <div class="qual-org">Університетські тренінги</div>
+      <div class="qual-desc">Участь у практичних воркшопах з розвитку soft skills, вирішення конфліктів та ефективної міжособистісної комунікації.</div>
+      <div class="qual-year">// 2022 - 2024</div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="footer-text">© 2026 // Студент групи М-21-Б // КГТА Полтавської обласної ради</div>
+  <div class="contact-links">
+    <a href="https://t.me/username">Telegram</a>
+    <a href="mailto:student@example.com">Email</a>
+    <a href="https://linkedin.com/in/username">LinkedIn</a>
+  </div>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  document.querySelectorAll('a, button, .skill-pill, .project-card, .paper-card, .qual-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      ring.style.width = '48px';
+      ring.style.height = '48px';
+      ring.style.borderColor = 'rgba(0,255,180,0.7)';
+    });
+    el.addEventListener('mouseleave', () => {
+      ring.style.width = '32px';
+      ring.style.height = '32px';
+      ring.style.borderColor = 'rgba(0,255,180,0.4)';
+    });
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        const siblings = e.target.parentElement?.querySelectorAll('.reveal');
+        if (siblings) {
+          [...siblings].forEach((s, i) => {
+            setTimeout(() => s.classList.add('visible'), i * 100);
+          });
+        }
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
